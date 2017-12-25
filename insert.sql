@@ -4,7 +4,7 @@ use mydbrentacar;
 insert into Korisnik (sifra_korisnika, brVozackeDozvole, email, adresa, telefon) values 
 				(1, '004045202', 'evaaloric@gmail.com', 'Bozidara Adzije 15, Beograd', '0693319533'), 
 				(2, '003298266', 'milanalincic@gmail.com', 'Bulevar Crvene armije 45, Beograd', '0693369854'), 
-                            (3, '003298266', 'petarbaveljic@gmail.com', 'Đure Strugara 78, cacak', '0663289657'), 
+                            (3, '003298266', 'petarbaveljic@gmail.com', 'Djure Strugara 78, cacak', '0663289657'), 
                             (4, '008676611', 'bojanbokic@gmail.com', 'Filipa Filipovica 65, Kraljevo', '0631289654'), 
                             (5, '001777065', 'jelenavojicic@gmail.com', 'General zdanova 69, Beograd', '0634578962'), 
                             (6, '007429727', 'aleksavranic@gmail.com', 'Ivana Milutinovica 78, Beograd', '0632145869'), 
@@ -20,18 +20,18 @@ insert into Korisnik (sifra_korisnika, brVozackeDozvole, email, adresa, telefon)
                             (16, '006522625', 'ivanapleskic@gmail.com', 'Tvornicka 11, Beograd', '0632145698'), 
                             (17, '005550750', 'jovanraulic@gmail.com', 'Slobodana Penezica-Krcuna 44, Beograd', '0632145896'), 
                             (18, '009024802', 'goransrnic@gmail.com', 'Bulevar mira 33, Beograd', '0692145698'), 
-                            (19, '006359867', 'dusanstajkic@gmail.com', 'Đure Salaja 23, Beograd', '0632125236'), 
+                            (19, '006359867', 'dusanstajkic@gmail.com', 'Djure Salaja 23, Beograd', '0632125236'), 
                             (20, '008146315', 'milantubic@gmail.com', 'Treci bulevar 44, Beograd', '0632145698'),
                             (21, '008146344', 'sloboda@gmail.com', 'Save Kovacevica 119, Beograd', '0632178528'),
                             (22, '008144455', 'visan@gmail.com', 'Tvornicka 41, Beograd', '0632789698'),
                             (23, '008146789', 'codex@gmail.com', 'Bulevar mira 333, Beograd', '0631242144'),
-                            (24, '004517477', 'bimida@gmail.com', 'Đure Salaja 43, Beograd', '0631242155'),
+                            (24, '004517477', 'bimida@gmail.com', 'Djure Salaja 43, Beograd', '0631242155'),
                             (25, '004517488', 'ozon@gmail.com', 'Marsala Tolbuhina 113, Kraljevo', '0631242166'),
                             (26, '004517445', 'orion@gmail.com', 'Mate Vidakovica 62, cacak', '0631462136'),
-                            (27, '604517484', 'coopservice@gmail.com', 'Đure Strugara 18, cacak', '0631242456'),
+                            (27, '604517484', 'coopservice@gmail.com', 'Djure Strugara 18, cacak', '0631242456'),
                             (28, '004515584', 'ecotime@gmail.com', 'Bozidara Adzije 36, Beograd', '0693218456'),
                             (29, '004517745', 'procter@gmail.com', 'Bulevar Crvene armije 145, Beograd', '0693218453'),
-                            (30, '008065789', 'stannes@gmail.com', 'Đure Strugara 18, cacak', '0693218544'),
+                            (30, '008065789', 'stannes@gmail.com', 'Djure Strugara 18, cacak', '0693218544'),
                             (31, '008065666', 'union@gmail.com', 'Filipa Filipovica 165, Kraljevo', '0693218654'),
                             (32, '008065336', 'pik@gmail.com', 'General zdanova 9, Beograd', '0693218533'),
                             (33, '008064455', 'profilab@gmail.com', 'General zdanova 55 , Beograd', '0693218412'),
@@ -40,8 +40,8 @@ insert into Korisnik (sifra_korisnika, brVozackeDozvole, email, adresa, telefon)
                             (36, '008065644', 'cer@gmail.com', 'Mose Pijade 63, Beograd', '0633218596'),
                             (37, '045665675', 'kristal@gmail.com', 'Slobodana Penezica-Krcuna 332, Beograd', '0673218596'),
                             (38, '004565675', 'relax@gmail.com', 'Treci bulevar 14, Beograd', '0645218596'),
-                            (39, '008452675', '2m@gmail.com', 'Đure Salaja 64, Beograd', '0679818596'),
-                            (40, '008065236', 'nesa@gmail.com', 'Đure Salaja 96, Beograd', '0612521896');
+                            (39, '008452675', '2m@gmail.com', 'Djure Salaja 64, Beograd', '0679818596'),
+                            (40, '008065236', 'nesa@gmail.com', 'Djure Salaja 96, Beograd', '0612521896');
                             
                             
 insert into Fizicko_Lice (sifra_korisnika, ime, prezime, jmbg) values 
@@ -51,9 +51,9 @@ insert into Fizicko_Lice (sifra_korisnika, ime, prezime, jmbg) values
                             (4, 'Bojan', 'Bokic', '1258965423651'), 
                             (5, 'Jelena', 'Vojcic', '785462956326'), 
                             (6, 'Aleksa', 'Vranic', '252632145852'), 
-                            (7, 'Milica', 'Đukic', '5556325996552'), 
+                            (7, 'Milica', 'Djukic', '5556325996552'), 
                             (8, 'Aleksandar', 'zutic', '5623564125112'), 
-                            (9, 'ĐorĐe', 'Jesic', '123025632851'), 
+                            (9, 'DjorDje', 'Jesic', '123025632851'), 
                             (10, 'Ana', 'Jovanovic', '125632965230'), 
                             (11, 'Marina', 'Peric', '5412365296123'), 
                             (12, 'Jovana', 'Mihajlovic', '452130256320'), 
@@ -166,11 +166,7 @@ insert into Rentira (sifra_rentiranja, sifra_korisnika, brRegTablica, datum_poce
                             (19, 29, 'BG330HJ', '2017-08-12', '2017-09-10', 0.00),
                             (20, 30, 'BG230JK', '2017-08-14', '2017-08-25', 0.00);
 
-insert into Nacin_Placanja (sifra_nacina_placanja, metod) values 
-                            (1, 'novac'),
-                            (2, 'kartica');
-
-                    
+                      
 insert into Dodatna_Oprema (sifra_opreme, naziv, cena) values 
 				(1, 'Krovni kofer',10.00),
                             (2, 'Sediste za dete',8.00),

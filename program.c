@@ -18,10 +18,10 @@ const char* db = "mydbrentacar";
 
 int main(){
 
-	int quit = 0, broj, i, sifra_r, sifra_np, sifra_p;
+	int quit = 0, broj, i, sifra_r,sifra_p;
     int size,arr[10000];
     char temp; 
-    char query[DUZINAQUERY], ime[20], prezime[20], datum[11], jmbg[13], brVD[9], email[45],telefon[10], PIB[9], brReg[10], datum1[11],nacin_p[7];
+    char query[DUZINAQUERY], ime[20], prezime[20], datum[11], jmbg[13], brVD[9], email[45],telefon[10], PIB[9], brReg[10], datum1[11], metod[10];
     char input1[DUZINA];
     char *imePrezime;
     MYSQL* conn = mysql_init(NULL);
@@ -39,15 +39,16 @@ int main(){
         printf("-----------------------------------------------------------\n\n"); 
         printf("Odaberite jednu od opcija:\n");
         printf("\t[1]  - Izlistati informacije o korisniku\n");
-        printf("\t[2]  - Izlistati informacije o rentiranju i placanju vozila koje je korisnik rentirao\n");
+        printf("\t[2]  - Izlistati informacije o rentiranju\n");
         printf("\t[3]  - Azurirati datum vracanja automobila\n");
-        printf("\t[4]  - Azurirati datum kada je isplaceno rentiranje\n");
+        printf("\t[4]  - Izvrsiti uplatu\n");
         printf("\t[5]  - Registrovati novog korisnika\n");
         printf("\t[6]  - Izlistati sve automobile koji su trenutno na stanju\n");
         printf("\t[7]  - Uneti podatke o novom rentiranju za izabranog korisnika\n");
         printf("\t[8]  - Izlistati dodatnu opremu za rentiranje vozila i uneti podatke o dodatnoj opremi koju korisnik zeli\n");
         printf("\t[9]  - Izlistati ponudjena osiguranja za rentirano vozilo i uneti podatke o osiguranjima koje korisnik zeli\n");
-        printf("\t[10] - Izlaz iz programa\n");
+        printf("\t[10] - Podaci o Placanju\n");
+        printf("\t[11] - Izlaz iz programa\n");
         printf("-----------------------------------------------------------\n\n"); 
         
         scanf("%d",&opcija);
@@ -64,6 +65,11 @@ int main(){
         			fgets(input1, DUZINA, stdin);
         			input1[strlen(input1) - 1] = '\0';
 
+                    if(strcmp(input1,"") == 0){
+                        printf("Morate da unesete ime i prezime!\n");
+                        break;
+                    }
+
         			imePrezime = strtok(input1," ");
         			strcpy(ime,imePrezime);
 
@@ -71,7 +77,7 @@ int main(){
         			strcpy(prezime, imePrezime);
         			
         			sprintf(query, "SELECT Fizicko_Lice.sifra_korisnika, ime, prezime, jmbg, brVozackeDozvole, email, adresa, telefon from Fizicko_Lice join Korisnik on Korisnik.sifra_korisnika = Fizicko_Lice.sifra_korisnika where ime= '%s' and prezime= '%s'",ime, prezime);
-        			//printf( "%s \n", prezime);
+        
         			if(mysql_query(conn, query)){
                     error_fatal("Upit 1: %s\n", mysql_error(conn));
                     }
@@ -94,6 +100,11 @@ int main(){
         			printf("Unesite ime kompanije: ");
         			fgets(input1, DUZINA, stdin);
         			input1[strlen(input1) - 1] = '\0';
+
+                    if(strcmp(input1,"") == 0){
+                        printf("Morate da unesete ime kompanije!\n");
+                        break;
+                    }
         			
         			sprintf(query, "SELECT Pravno_Lice.sifra_korisnika, naziv, PIB, email, adresa, telefon from Pravno_Lice join Korisnik on Korisnik.sifra_korisnika = Pravno_Lice.sifra_korisnika where naziv= '%s'",input1);
         			
@@ -123,10 +134,11 @@ int main(){
         		printf("Unesite sifru korisnika: ");
         		scanf("%d",&broj);
         		getchar();
-        		sprintf(query, "select * from Rentira join Placanje on Placanje.sifra_rentiranja = Rentira.sifra_rentiranja join Nacin_Placanja on Nacin_Placanja.sifra_nacina_placanja = Placanje.sifra_nacina_placanja where Rentira.sifra_korisnika = '%d'",broj);
+
+        		sprintf(query, "select * from Rentira where Rentira.sifra_korisnika = '%d'",broj);
 
 				if(mysql_query(conn, query))
-                    error_fatal("Upit 1: Uneli ste pogresnu sifru, %s\n", mysql_error(conn));
+                    error_fatal("Upit 1: %s\n", mysql_error(conn));
 
                 result_set = mysql_use_result(conn);
                 int num_fields = mysql_num_fields(result_set);
@@ -161,6 +173,24 @@ int main(){
         		scanf("%s",datum);
         		getchar();
 
+
+                sprintf(query, "select datum_vracanja from Rentira where Rentira.sifra_rentiranja = '%d'",broj);
+                    if(mysql_query(conn, query))
+                    error_fatal("Upit 4: %s\n", mysql_error(conn));
+
+                    result_set = mysql_store_result(conn);                   
+                    while((row = mysql_fetch_row(result_set )) !=0)
+                    {                       
+                        sifra_p = row[0] ? 1 : 0;
+                       
+                    }
+                    mysql_free_result(result_set );
+
+                    if(sifra_p != 0){
+                        printf("Automobil je vec vracen\n");
+                        break;
+                    }
+
         		sprintf(query, "update Rentira set datum_vracanja = '%s' where sifra_rentiranja = '%d'",datum,broj);
 
         		if(mysql_query(conn, query))
@@ -172,19 +202,45 @@ int main(){
         	case 4:
            
         		getchar();
-        		printf("Ukoliko zelite da azurirate datum kada je korisnik isplatio racun:\n");
-        		printf("Unesite sifru placanja: ");
-        		scanf("%d",&broj);
-        		printf("Unesite datum kada je korisnik isplatio racun: ");
+        		printf("Unesite sifru rentiranja za koje vrsite placanje: ");
+                scanf("%d",&sifra_r);
+                getchar();
+        		printf("Ukoliko korisnik placa novcem potrebno je da upise 'novac', a inace 'kartica': ");
+                scanf("%s",metod);
+                getchar();
+          		printf("Unesite datum kada je korisnik isplatio racun: ");
         		scanf("%s",datum);
+                getchar();
+                printf("Unesite sumu koju je korisnik uplatio: ");
+                scanf("%d",&broj);
         		getchar();
 
-        		sprintf(query,"update Placanje set datum_placanja = '%s' where sifra_placanja = '%d'",datum,broj);
+                 
+   
+                sprintf(query, "select max(sifra_nacina_placanja) from Nacin_Placanja");
+                    if(mysql_query(conn, query))
+                    error_fatal("Upit 4: %s\n", mysql_error(conn));
 
-        		if(mysql_query(conn, query))
-                    error_fatal("Upit 4: Pogresno ste uneli neku od sledecih vrednosti - sifra_placanja, datum %s\n", mysql_error(conn)); 
+                    result_set = mysql_store_result(conn);                   
+                    while((row = mysql_fetch_row(result_set )) !=0)
+                    {                       
+                        sifra_p = row[0] ? atoi(row[0]) : 0;
+                       
+                    }
+                    mysql_free_result(result_set );
+                    
+                    sifra_p = sifra_p + 1;
+                    
+                    sprintf(query,"INSERT INTO Nacin_Placanja(sifra_nacina_placanja, metod) VALUES ('%d','%s')", sifra_p, metod);
+                    if(mysql_query(conn, query))
+                    error_fatal("Greska u upitu 4: %s\n", mysql_error(conn));   
+ 
+                    sprintf(query, "insert into Placanje(sifra_rentiranja, sifra_nacina_placanja, datum_placanja, uplacena_suma) values ('%d','%d','%s','%d')", sifra_r,sifra_p, datum, broj);
+                    if(mysql_query(conn, query))
+                    error_fatal("Greska u upitu 4: %s\n", mysql_error(conn));   
+              
+            
             break;
-
             case 5:
 
             	getchar();
@@ -199,7 +255,6 @@ int main(){
                 while((row = mysql_fetch_row(result_set )) !=0)
                 {                       
                     sifra_p = row[0] ? atoi(row[0]) : 0;
-                    //printf("%d\n", sifra_p);
                 }
                 mysql_free_result(result_set );
                 sifra_p = sifra_p + 1;
@@ -218,8 +273,7 @@ int main(){
                     printf("Unesite adresu: ");
         			fgets(input1, DUZINA, stdin);
         			input1[strlen(input1) - 1] = '\0';
-        			//printf("%s\n",input1 );
-
+        		
         			sprintf(query, "INSERT INTO Korisnik(sifra_korisnika, brVozackeDozvole, email, adresa, telefon) VALUES ('%d', '%s', '%s', '%s', '%s')", sifra_p, brVD, email, input1, telefon);
                 	if(mysql_query(conn, query))
                     error_fatal("Upit 5: Pogresan unos!, %s\n", mysql_error(conn));
@@ -282,35 +336,17 @@ int main(){
 
         	case 7:
 
-                    printf("Unesite sifru korisnika, br registarskih tablica automobila koji korisnik zeli da iznajmi, datum pocetka iznajmljivanja, datum kraja iznajmljivanja: ");
-                    scanf("%d %s %s %s",&broj, brReg, datum, datum1);
+                    printf("Unesite sifru korisnika: ");
+                    scanf("%d",&broj);
                     getchar();
 
-                    printf("Ukoliko korisnik placa novcem potrebno je da upise 'novac', a inace 'kartica': ");
-                    scanf("%s",nacin_p);
+                    printf("Unesite br. registarskih tablica automobila koji korisnik zeli da iznajmi: ");
+                    scanf("%s",brReg);
                     getchar();
-   
-                    sprintf(query, "select max(sifra_placanja) from Placanje");
-                    if(mysql_query(conn, query))
-                    error_fatal("Upit 7: %s\n", mysql_error(conn));
-                    result_set = mysql_store_result(conn);                   
-                    while((row = mysql_fetch_row(result_set )) !=0)
-                    {                       
-                        sifra_p = row[0] ? atoi(row[0]) : 0;
-                        //printf("%d\n", sifra_p);
-                    }
-                    mysql_free_result(result_set );
 
-                    sprintf(query, "select max(sifra_nacina_placanja) from Nacin_Placanja");
-                    if(mysql_query(conn, query))
-                    error_fatal("Upit 7: %s\n", mysql_error(conn));
-                    result_set = mysql_store_result(conn);                   
-                    while((row = mysql_fetch_row(result_set )) !=0)
-                    {                       
-                        sifra_np = row[0] ? atoi(row[0]) : 0;
-                       // printf("%d\n", sifra_np);
-                    }
-                    mysql_free_result(result_set );
+                    printf("Unesite datum pocetka iznajmljivanja, datum kraja iznajmljivanja: ");
+                    scanf("%s %s",datum, datum1);
+                    getchar();
 
                     sprintf(query, "select max(sifra_rentiranja) from Rentira");
                     if(mysql_query(conn, query))
@@ -319,26 +355,16 @@ int main(){
                     while((row = mysql_fetch_row(result_set )) !=0)
                     {                       
                         sifra_r = row[0] ? atoi(row[0]) : 0;
-                       // printf("%d\n", sifra_r);
+          
                     }
                     mysql_free_result(result_set );
 
-                    sifra_p = sifra_p + 1;
-                    sifra_np = sifra_np + 1;
                     sifra_r = sifra_r + 1;
 
                     sprintf(query, "insert into Rentira(sifra_rentiranja ,sifra_korisnika, brRegTablica, datum_pocetka, datum_kraja) values ('%d','%d', '%s', '%s', '%s')",sifra_r, broj, brReg, datum, datum1);
                     if(mysql_query(conn, query))
                     error_fatal("Greska u upitu 7: %s\n", mysql_error(conn));
-
-        			sprintf(query, "insert into Nacin_Placanja(sifra_nacina_placanja, metod) values ('%d','%s')", sifra_np, nacin_p);
-        			if(mysql_query(conn, query))
-                    error_fatal("Greska u upitu 7: %s\n", mysql_error(conn));
-
-        			sprintf(query, "insert into Placanje(sifra_placanja,sifra_rentiranja, sifra_nacina_placanja) values ('%d','%d','%d')", sifra_p,sifra_r,sifra_np);
-        			if(mysql_query(conn, query))
-                    error_fatal("Greska u upitu 7: %s\n", mysql_error(conn));	
-			      
+     			  
 
                 break;
 
@@ -363,13 +389,16 @@ int main(){
                     printf("-----------------------------------------------------------\n");
                     mysql_free_result(result_set);
 
-                    printf("Unesite sifru rentiranja vozila i sifre opreme koju korisnik zeli da iznajmi: ");
+                    printf("Unesite sifru rentiranja vozila i sifre opreme koju korisnik zeli da iznajmi ili '0' ukoliko odustajete: ");
                     scanf("%d",&broj);
                     getchar();
 
+                    if(broj == 0)
+                        break;
+
                     i=0;
                     do{
-                        scanf("%d%c", &arr[i], &temp); 
+                        scanf("%d%c", &arr[i], &temp);
                         i++; 
                         } while(temp!= '\n');
 
@@ -426,8 +455,34 @@ int main(){
                     } 
 
                 break;
+                case 10:
 
-            	case 10:
+                    printf("Unesite sifru rentiranja: ");
+                    scanf("%d",&broj);
+                    getchar();
+
+                    
+                    sprintf(query, "select * from Placanje join Nacin_Placanja on Placanje.sifra_nacina_placanja = Nacin_Placanja.sifra_nacina_placanja where Placanje.sifra_rentiranja = '%d'",broj);
+                    if(mysql_query(conn, query))
+                    error_fatal("Upit 10: %s\n", mysql_error(conn));
+
+                    result_set = mysql_use_result(conn);
+                    num_fields1 = mysql_num_fields(result_set);
+                    field = mysql_fetch_fields(result_set);
+
+                    while((row = mysql_fetch_row(result_set)) != NULL){
+                        printf("-----------------------------------------------------------\n");      
+                        for(i=0; i< num_fields1; i++)
+                            printf("%-30s | %s\n", field[i].name, row[i]);
+
+                    }
+                    printf("-----------------------------------------------------------\n");
+                    mysql_free_result(result_set);
+                    getchar();
+
+
+                break;
+            	case 11:
                     quit = 1;
                     break;
             	default:

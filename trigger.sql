@@ -35,7 +35,7 @@ begin
 	
     declare ukupna_c int;
     declare pop int;
-    set new.krajnji_datum = (select Rentira.datum_kraja from Rentira where Rentira.sifra_rentiranja = new.sifra_rentiranja);
+    set new.krajnji_datum = (select Rentira.datum_kraja from Rentira where Rentira.sifra_rentiranja = new.sifra_rentiranja) + 10;
 	set new.konacna_cena = 0.00;
     
     if(exists (select PL.sifra_korisnika from Pravno_Lice PL, Rentira R where PL.sifra_korisnika = R.sifra_korisnika and R.sifra_rentiranja = new.sifra_rentiranja))
@@ -105,10 +105,9 @@ begin
     then update Vozilo set status = 'na stanju' where new.brRegTablica = Vozilo.brRegTablica;
     end if;
 
-    
+ 
 
 end |
-
 
 delimiter ;
 
